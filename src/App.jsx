@@ -10,7 +10,7 @@ import { useState } from 'react';
 // Tarefas:
 // todo - O botão de login deve disparar a função login(), importada no topo deste arquivo, e passar os dados necessários.
 // todo - Desabilite o botão de Login caso o e-mail esteja em branco OU a senha for menor que 6 dígitos.
-// todo - Desabilite o botão de Login equanto você está executando o login.
+// >>> Desabilite o botão de Login equanto você está executando o login.
 // todo - Mostre uma mensagem de erro de login() caso o Login falhe. A mensagem deve ser limpa a cada nova tentativa de Login.
 // todo - Mostre um alerta caso o login seja efetuado com sucesso (javascript alert). Investigue a função login() para entender como ter sucesso na requisição.
 
@@ -31,21 +31,18 @@ export default function LoginForm() {
     console.log(novoPassword);
   }
 
-  async function handleSubmit() {
+  function handleSubmit() {
     setEmail([...email, novoTexto]);
     setNovoTexto('');
     setPassword([...password, novoPassword]);
     setNovoPassword('');
 
-    const data = await login({ email, password })
+    const data = login({ email, password })
       .then(response => { return response })
-      .catch(error => { return error })
-
-    if (data.message === 'success!') {
-      alert(data.message);
-    }
-
-    data.message === 'e-mail or password wrong.' ? setErrorMessage(data.message) : setErrorMessage(' ');
+      .catch((error) => {
+        console.log(error);
+        setErrorMessage(error);
+      })
   }
 
   return (
@@ -53,7 +50,7 @@ export default function LoginForm() {
       <div className='login-form'>
         <h1>Login Form 🐞</h1>
         {/* Coloque a mensagem de erro de login na div abaixo. Mostre a div somente se houver uma mensagem de erro. */}
-        <div className='errorMessage'>{errorMessage}</div>
+        {errorMessage && <div className='errorMessage'>{errorMessage.message}</div>}
         <div className='row'>
           <label htmlFor={'email'}>Email</label>
           <input
