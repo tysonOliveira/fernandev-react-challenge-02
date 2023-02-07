@@ -15,23 +15,71 @@ import { useState } from 'react';
 // todo - Mostre um alerta caso o login seja efetuado com sucesso (javascript alert). Investigue a função login() para entender como ter sucesso na requisição.
 
 export default function LoginForm() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [novoTexto, setNovoTexto] = useState('');
+  const [novoPassword, setNovoPassword] = useState('');
+
+  function handleEmail(event) {
+    setNovoTexto(event.target.value);
+    console.log(novoTexto);
+  }
+
+  function handlePassword(event) {
+    setNovoPassword(event.target.value);
+    console.log(novoPassword);
+  }
+
+  async function handleSubmit() {
+    setEmail([...email, novoTexto]);
+    setNovoTexto('');
+    setPassword([...password, novoPassword]);
+    setNovoPassword('');
+
+    const data = await login({ email, password })
+      .then(response => { return response })
+      .catch(error => { return error })
+
+    if (data.message === 'success!') {
+      alert(data.message);
+    }
+
+    data.message === 'e-mail or password wrong.' ? setErrorMessage(data.message) : setErrorMessage(' ');
+  }
+
   return (
     <div className='wrapper'>
       <div className='login-form'>
         <h1>Login Form 🐞</h1>
         {/* Coloque a mensagem de erro de login na div abaixo. Mostre a div somente se houver uma mensagem de erro. */}
-        <div className='errorMessage'></div>
+        <div className='errorMessage'>{errorMessage}</div>
         <div className='row'>
           <label htmlFor={'email'}>Email</label>
-          <input id={'email'} type={'email'} autoComplete='off' />
+          <input
+            id={'email'}
+            type={'email'}
+            value={novoTexto}
+            onChange={handleEmail}
+            autoComplete='off'
+          />
         </div>
         <div className='row'>
           <label htmlFor={'password'}>Password</label>
-          <input id={'password'} type={'password'} />
+          <input
+            id={'password'}
+            type={'password'}
+            value={novoPassword}
+            onChange={handlePassword}
+          />
         </div>
 
         <div className='button'>
-          <button>Login</button>
+          <button
+            onClick={handleSubmit}
+            disabled={novoTexto === '' || novoPassword.length < 6}
+          >
+            Login</button>
         </div>
       </div>
     </div>

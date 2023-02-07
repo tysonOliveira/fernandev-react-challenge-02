@@ -19,6 +19,7 @@ a {
   color: #646cff;
   text-decoration: inherit;
 }
+
 a:hover {
   color: #535bf2;
 }
@@ -54,15 +55,24 @@ button {
   display: block;
   width: 100%;
 }
+
 button:hover {
   background: #f3f3f3;
 }
+
 button:active {
   border-color: #646cff;
 }
+
+button:disabled {
+  background-color: #f3f3f3;
+  color: #838c94;
+}
+
 label {
   display: block;
 }
+
 .wrapper {
   background: #fff;
   padding: 30px;
@@ -70,20 +80,24 @@ label {
   display: block;
   border-radius: 10px;
 }
+
 .row {
   display: flex;
   justify-content: space-between;
   margin-bottom: 15px;
   align-items: center;
 }
+
 input {
   border: 1px solid #ccc;
   border-radius: 6px;
   padding: 10px;
 }
+
 input:focus {
   border-color: #646cff;
 }
+
 .errorMessage {
   color: red;
   display: block;
