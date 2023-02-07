@@ -8,41 +8,43 @@ import { useState } from 'react';
 // * Não é permitido usar refs
 //
 // Tarefas:
-// todo - O botão de login deve disparar a função login(), importada no topo deste arquivo, e passar os dados necessários.
-// todo - Desabilite o botão de Login caso o e-mail esteja em branco OU a senha for menor que 6 dígitos.
-// >>> Desabilite o botão de Login equanto você está executando o login.
-// todo - Mostre uma mensagem de erro de login() caso o Login falhe. A mensagem deve ser limpa a cada nova tentativa de Login.
-// todo - Mostre um alerta caso o login seja efetuado com sucesso (javascript alert). Investigue a função login() para entender como ter sucesso na requisição.
+// Feito >>> O botão de login deve disparar a função login(), importada no topo deste arquivo, e passar os dados necessários.
+// Feito >>> Desabilite o botão de Login caso o e-mail esteja em branco OU a senha for menor que 6 dígitos.
+// Feito >>> Desabilite o botão de Login equanto você está executando o login.
+// Feito >>> Mostre uma mensagem de erro de login() caso o Login falhe. A mensagem deve ser limpa a cada nova tentativa de Login.
+// >>> Mostre um alerta caso o login seja efetuado com sucesso (javascript alert). Investigue a função login() para entender como ter sucesso na requisição.
 
 export default function LoginForm() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [data, setData] = useState({
+    email: '',
+    password: '',
+  });
   const [errorMessage, setErrorMessage] = useState('');
-  const [novoTexto, setNovoTexto] = useState('');
-  const [novoPassword, setNovoPassword] = useState('');
+  const [isRequesting, setIsRequesting] = useState(false);
 
   function handleEmail(event) {
-    setNovoTexto(event.target.value);
-    console.log(novoTexto);
+    setData({ ...data, [event.target.name]: event.target.value });
   }
 
   function handlePassword(event) {
-    setNovoPassword(event.target.value);
-    console.log(novoPassword);
+    setData({ ...data, [event.target.name]: event.target.value });
   }
 
   function handleSubmit() {
-    setEmail([...email, novoTexto]);
-    setNovoTexto('');
-    setPassword([...password, novoPassword]);
-    setNovoPassword('');
+    setErrorMessage('');
+    setIsRequesting(true);
 
-    const data = login({ email, password })
-      .then(response => { return response })
-      .catch((error) => {
-        console.log(error);
-        setErrorMessage(error);
-      })
+    let values = { ...data }
+
+    login(values)
+      .then(() => alert("success!"))
+      .catch(error => setErrorMessage(error))
+      .finally(() => setIsRequesting(false));
+
+    setData({
+      email: '',
+      password: ''
+    })
   }
 
   return (
@@ -55,8 +57,9 @@ export default function LoginForm() {
           <label htmlFor={'email'}>Email</label>
           <input
             id={'email'}
+            name={'email'}
             type={'email'}
-            value={novoTexto}
+            value={data.email}
             onChange={handleEmail}
             autoComplete='off'
           />
@@ -65,8 +68,9 @@ export default function LoginForm() {
           <label htmlFor={'password'}>Password</label>
           <input
             id={'password'}
+            name={'password'}
             type={'password'}
-            value={novoPassword}
+            value={data.password}
             onChange={handlePassword}
           />
         </div>
@@ -74,11 +78,11 @@ export default function LoginForm() {
         <div className='button'>
           <button
             onClick={handleSubmit}
-            disabled={novoTexto === '' || novoPassword.length < 6}
+            disabled={data.email === '' || data.password.length < 6 || isRequesting}
           >
             Login</button>
         </div>
       </div>
-    </div>
+    </div >
   );
 }
